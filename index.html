@@ -219,7 +219,8 @@
 
   /* ---------- Stats / urgency ---------- */
   .urgency{background:var(--rojo);color:#fff;position:relative;overflow:hidden}
-  .urgency .stripe{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent 0 40px,rgba(255,255,255,.05) 40px 80px)}
+  .urgency .stripe{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(45deg,transparent 0 40px,rgba(255,255,255,.05) 40px 80px)}
+  .urgency .wrap{position:relative;z-index:1}
   .stats{display:flex;justify-content:center;gap:48px;flex-wrap:wrap;margin:36px 0 40px;position:relative}
   .stat .n{font-family:'Baloo 2';font-weight:800;font-size:clamp(2.4rem,6vw,3.6rem);color:var(--gualda)}
   .stat .l{font-weight:700;opacity:.9}
