@@ -486,10 +486,12 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.getElementById('yr').textContent = new Date().getFullYear();
 
-  /* ---------- WAITLIST (Formspree + local fallback) ---------- */
-  // 👉 SWAP THIS: create a free form at https://formspree.io and paste your endpoint below.
-  var FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
-  var configured = FORMSPREE_ENDPOINT.indexOf("YOUR_FORM_ID") === -1;
+  /* ---------- WAITLIST (Google Sheet + local fallback) ---------- */
+  // 👉 SWAP THIS: deploy apps-script/Code.gs as a Web app and paste its /exec URL below.
+  //    Setup steps are in apps-script/Code.gs and the README. Until you paste a real
+  //    URL, the form runs in demo mode (no emails are saved anywhere).
+  var SHEET_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE";
+  var configured = SHEET_ENDPOINT.indexOf("PASTE_YOUR") === -1 && SHEET_ENDPOINT.indexOf("/exec") !== -1;
 
   function bumpLocalCount(){
     var n = parseInt(localStorage.getItem('pp_waitlist')||'0',10) + 1;
@@ -530,10 +532,14 @@
         setTimeout(success, 500);
         return;
       }
-      fetch(FORMSPREE_ENDPOINT, {
-        method:'POST', headers:{'Accept':'application/json'},
-        body: new FormData(form)
-      }).then(function(r){ r.ok ? success() : fail(); }).catch(fail);
+      // Google Apps Script web apps don't send CORS headers, so we POST in
+      // no-cors mode (opaque response). The row still lands in the Sheet;
+      // we just can't read the reply, so completion is treated as success.
+      var fd = new FormData(form);
+      fd.append('source', formId);
+      fd.append('referrer', document.referrer || location.href);
+      fetch(SHEET_ENDPOINT, { method:'POST', mode:'no-cors', body: fd })
+        .then(success).catch(fail);
     });
   }
   handle('form-hero','msg-hero');

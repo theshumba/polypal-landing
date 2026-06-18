@@ -7,15 +7,20 @@ A single-file, zero-build landing page + email waitlist for **PolyPal** — prac
 ## What's here
 - `index.html` — the entire page. HTML, CSS and JS inline. Open it in any browser.
 
-## Wire up the waitlist (1 minute)
-The form works in **demo mode** out of the box (signups are counted in `localStorage` so you can test). To collect real emails:
+## Wire up the waitlist → Google Sheet (~3 minutes)
+The form works in **demo mode** out of the box (signups are only counted in the visitor's own `localStorage` — **no emails are saved**). To collect real emails into a Sheet your co-founders can see:
 
-1. Go to [formspree.io](https://formspree.io) → create a free form → copy your endpoint (looks like `https://formspree.io/f/abcdwxyz`).
-2. Open `index.html`, find this line near the bottom:
+1. **Make a Sheet.** Create a new Google Sheet. In row 1, add headers: `Timestamp | Email | Source | Referrer`.
+2. **Add the script.** In that Sheet: **Extensions → Apps Script**. Delete the sample code, paste the contents of [`apps-script/Code.gs`](apps-script/Code.gs), and **Save**.
+3. **Deploy it.** **Deploy → New deployment → Web app.** Set **Execute as: Me**, **Who has access: Anyone**. Click **Deploy**, authorise, and **copy the Web app URL** (ends in `/exec`).
+4. **Paste the URL.** Open `index.html`, find this line near the bottom and paste your URL:
    ```js
-   var FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
+   var SHEET_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE";
    ```
-3. Replace `YOUR_FORM_ID` with your real form ID. Done — submissions now land in your Formspree inbox.
+   Done — every signup now appends a row to your Sheet (duplicate emails are skipped).
+
+### Give your co-founders access
+In the Sheet, click **Share** (top-right) → add their Google emails as **Viewer** (read-only) or **Editor**. They'll see the live waitlist update in real time — no logins to your accounts, nothing to forward.
 
 ## Deploy to GitHub Pages
 ```bash
